@@ -1,0 +1,47 @@
+services:
+  guard:
+    image: sec_lab_node
+    container_name: node1_guard
+    hostname: guard
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./guard:/app
+    networks:
+      sec_lab_net:
+        ipv4_address: 192.168.50.2
+    command: sleep infinity
+
+  victim:
+    image: sec_lab_node
+    container_name: node2_victim
+    hostname: victim
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    networks:
+      sec_lab_net:
+        ipv4_address: 192.168.50.10
+    command: sleep infinity
+
+  attacker:
+    image: sec_lab_node
+    container_name: node3_attacker
+    hostname: attacker
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./attacker:/app
+    networks:
+      sec_lab_net:
+        ipv4_address: 192.168.50.99
+    command: sleep infinity
+
+networks:
+  sec_lab_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.50.0/24
